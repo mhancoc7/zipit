@@ -260,7 +260,7 @@ for ($i = 0; $i < ($size = 100); $i++) {
     }
 
 // check file size
-if (filesize('$url-$timestamp.zip') < 5261334937) { 
+if (filesize('$url-$timestamp.zip') > 5261334937) { 
 // alert Cloud Files object size exceeded
    echo '<script type="text/javascript">';
    echo 'alert("Backup Failed!\n\nCloud Files max object size of 5GB exceeded.\n\nPlease reduce the size of your content and try again.")';
