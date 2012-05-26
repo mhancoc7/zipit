@@ -44,7 +44,7 @@ if (!is_dir('./web/content/zipit/zipit-backups/files')) {
 	<center><ul class="tabs group">
 	</ul></center>
 <div class="head">Zipit Backup Utility</div>
-//<?php
+<?php
 
 //if (($snaptime > 11.00) && ($snaptime < 12.05) )  
 //{
