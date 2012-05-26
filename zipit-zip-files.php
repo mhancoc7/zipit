@@ -7,7 +7,7 @@
 ###############################################################
 
 // set default timezone
-    date_default_timezone_set('America/Los Angeles');
+    date_default_timezone_set('America/Chicago');
     $snaptime = date("H.i");
 
 // include password protection
@@ -44,46 +44,46 @@ if (!is_dir('./web/content/zipit/zipit-backups/files')) {
 	<center><ul class="tabs group">
 	</ul></center>
 <div class="head">Zipit Backup Utility</div>
-<?php
+//<?php
 
-if (($snaptime > 11.00) && ($snaptime < 12.05) )  
-{
-   echo '<script type="text/javascript">';
-   echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-   echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
-}
+//if (($snaptime > 11.00) && ($snaptime < 12.05) )  
+//{
+ //  echo '<script type="text/javascript">';
+  // echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
+ //  echo '</script>'; 
+ //  echo "<script>location.href='zipit-files.php'</script>"; 
+//}
 
-elseif (($snaptime > 15.00) && ($snaptime < 16.05) ) 
+//elseif (($snaptime > 15.00) && ($snaptime < 16.05) ) 
 
-{
-   echo '<script type="text/javascript">';
-   echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-   echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
-}
+//{
+  // echo '<script type="text/javascript">';
+  // echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
+  // echo '</script>'; 
+  // echo "<script>location.href='zipit-files.php'</script>"; 
+//}
 
-elseif (($snaptime > 19.00) && ($snaptime < 20.05) ) 
+//elseif (($snaptime > 19.00) && ($snaptime < 20.05) ) 
 
-{
-   echo '<script type="text/javascript">';
-   echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-   echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
-}
+//{
+  // echo '<script type="text/javascript">';
+  // echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
+  // echo '</script>'; 
+  // echo "<script>location.href='zipit-files.php'</script>"; 
+//}
 
-elseif (($snaptime > 23.00) && ($snaptime < 24.05) ) 
+//elseif (($snaptime > 23.00) && ($snaptime < 24.05) ) 
 
-{
-   echo '<script type="text/javascript">';
-   echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-   echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
-}
+//{
+  // echo '<script type="text/javascript">';
+  // echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
+  // echo '</script>'; 
+   //echo "<script>location.href='zipit-files.php'</script>"; 
+//}
  
-else 
+//else 
 
-{
+//{
 
 // define zipit log file
     $zipitlog = "logs/zipit.log";
@@ -354,7 +354,7 @@ else {
    fwrite($fh, $stringData);
    fclose($fh);
 
-}
+//}
 ?>
 </div>
 </body>
