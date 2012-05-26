@@ -319,6 +319,12 @@ if (filesize('$url-$timestamp.zip') > 5261334937) {
 
 // clean up local backups
    shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Backup moved to Cloud Files successful MD5 Hash check passed.\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
 }
 
 else {
