@@ -102,6 +102,13 @@ try {
     $auth->authenticate();
     $auth->ssl_use_cabundle();
     $conn = new CF_Connection($auth,$servicenet=false);
+    
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit connected to  Cloud Files successful.\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
 }
 catch (Exception $e) {
    echo '<script type="text/javascript">';
@@ -235,7 +242,7 @@ echo '<center>';
 // write to log
     $logtimestamp =  date("M-d-Y_H-i-s"); 
     $fh = fopen($zipitlog, 'a') or die("can't open file");
-    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
+    $stringData = "Zipit creation for $url-$timestamp.zip\n";
     fwrite($fh, $stringData);
     fclose($fh);
 
@@ -296,6 +303,13 @@ if (filesize('$url-$timestamp.zip') > 5261334937) {
 // create zipit-backups-files Cloud Files container if it does exist and send file to zipit-backups-files container
     $container = $conn->create_container("zipit-backups-files");
     $container->make_private();
+    
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Zipit backup moved to Cloud Files successful. MD5 Hash check passed.\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
 
 // set zipit object
     $object = $container->create_object("$url-$timestamp.zip");
@@ -319,10 +333,11 @@ if (filesize('$url-$timestamp.zip') > 5261334937) {
 
 // clean up local backups
    shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
+   
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Backup moved to Cloud Files successful MD5 Hash check passed.\n\n";
+   $stringData = "$logtimestamp -- Zipit backup moved to Cloud Files successful. MD5 Hash check passed.\n";
    fwrite($fh, $stringData);
    fclose($fh);
 }
