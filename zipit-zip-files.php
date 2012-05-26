@@ -106,7 +106,7 @@ try {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit connected to  Cloud Files successful.\n";
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit connected to Cloud Files successful.\n";
    fwrite($fh, $stringData);
    fclose($fh);
 }
