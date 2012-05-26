@@ -7,7 +7,7 @@
 ###############################################################
 
 // set default timezone
-    date_default_timezone_set('America/Chicago');
+    date_default_timezone_set('America/Los Angeles');
     $snaptime = date("H.i");
 
 // include password protection
