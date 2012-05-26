@@ -242,7 +242,7 @@ echo '<center>';
 // write to log
     $logtimestamp =  date("M-d-Y_H-i-s"); 
     $fh = fopen($zipitlog, 'a') or die("can't open file");
-    $stringData = "Zipit creation for $url-$timestamp.zip\n";
+    $stringData = "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
     fwrite($fh, $stringData);
     fclose($fh);
 
@@ -307,7 +307,7 @@ if (filesize('$url-$timestamp.zip') > 5261334937) {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit backup moved to Cloud Files successful. MD5 Hash check passed.\n";
+   $stringData = "$logtimestamp -- Cloud Files container successfully created or already exists.\n";
    fwrite($fh, $stringData);
    fclose($fh);
 
