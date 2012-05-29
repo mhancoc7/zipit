@@ -156,7 +156,7 @@ catch (Exception $e) {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Database connection failed.\n$logtimestamp Zipit completed\n\n";
+   $stringData = "$logtimestamp -- Database connection failed.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
 
