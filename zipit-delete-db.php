@@ -72,7 +72,7 @@ echo "<center><input readonly style='border: 1px solid #818185; background-color
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- $logtimestamp -- Zipit backup, $file, successfully deleted.\n$logtimestamp Zipit completed\n\n";
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit backup, $file, successfully deleted.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    
