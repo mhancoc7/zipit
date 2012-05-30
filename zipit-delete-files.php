@@ -60,7 +60,7 @@ catch (Exception $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-files.php'</script>"; 
+   echo "<script>location.href='zipit-files.php?logout=1'</script>"; 
    die();
 
 }

@@ -137,7 +137,7 @@ $(document).ready(function() {
 
 <script type="text/javascript">
 function check(){
-var r = confirm("Are you sure you want to delete this backup? \n\nThis will remove your backup from your Cloud Files account permanantly!");
+var r = confirm("Are you sure you want to delete this backup? \n\nThis will remove your backup from your Cloud Files account permanantly!\n\nBe sure that you are not currently downloading this backup before proceeding.");
 if(r){
 return true;
 }
