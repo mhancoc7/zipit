@@ -139,7 +139,6 @@ catch (Exception $e) {
    echo '<script type="text/javascript">';
    echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
    echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
 
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -147,7 +146,7 @@ catch (Exception $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-files.php'</script>";
+   echo "<script>location.href='zipit-files.php?logout=1'</script>";
    die();
 }
 
