@@ -6,6 +6,8 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
+error_reporting(E_ERROR | E_PARSE);
+
 // require zipit configuration
 require('zipit-config.php');
 

@@ -103,7 +103,7 @@ function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
 
 <script type="text/javascript">
 function check(){
-var r = confirm("Are you sure you want to delete this backup? \n\nThis will remove your backup from your Cloud Files account permanantly!");
+var r = confirm("Are you sure you want to delete this backup? \n\nThis will remove your backup from your Cloud Files account permanantly!\n\nBe sure that you are not currently downloading this backup before proceeding.");
 if(r){
 return true;
 }
@@ -139,7 +139,6 @@ catch (Exception $e) {
    echo '<script type="text/javascript">';
    echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
    echo '</script>'; 
-   echo "<script>location.href='zipit-files.php'</script>"; 
 
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -147,7 +146,7 @@ catch (Exception $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-files.php'</script>";
+   echo "<script>location.href='zipit-files.php?logout=1'</script>";
    die();
 }
 

@@ -60,7 +60,7 @@ catch (Exception $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-files.php'</script>"; 
+   echo "<script>location.href='zipit-files.php?logout=1'</script>"; 
    die();
 
 }
@@ -69,6 +69,13 @@ catch (Exception $e) {
     $container->delete_object($file);
 echo "<center><input readonly style='border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:300px; color:#000; padding:3px;' type= 'submit' value='Backup Deleted -- Click To Continue' onclick='location = \"zipit-files.php\";'/></a></center>";
 
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit backup, $file, successfully deleted.\n$logtimestamp Zipit completed\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
+   
 ?>
 </div>
 </body>
