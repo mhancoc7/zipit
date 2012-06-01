@@ -50,7 +50,7 @@
 <pre style="font-size:12px;"> 
 <? 
    $lfDispl->setRowsToRead(100);    // Read 100 rows 
-   $lfDispl->setAlign("top");       // Last row on top 
+   $lfDispl->setAlign("bottom");       // Last row on top 
    $lfDispl->setFilepath($filename); // from this logfile 
    $lfDispl->setLineBreak(150);  // Break the row after 150 chars 
    $lfDispl->returnFormated();   // Output  
