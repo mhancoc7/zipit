@@ -99,7 +99,7 @@ function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
      $url = $_SERVER['SERVER_NAME'];
 echo "<center><em>";
 echo str_trim($url, CHARS, 43, '...');
-echo "</em></center><br /><br />";
+echo "</em></center><br />";
 
 ?>
 <div class="logs">
