@@ -208,10 +208,13 @@ margin-bottom:10px;
 
 .logs {
     border: solid 2px #ff0000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius:    10px; 
+    border-radius: 10px;
     background: #000000;
     color: #ffffff;
     padding: 4px; 
     width: 750px; 
-    height: 600px;
+    height: 300px;
     overflow: auto;
     }
