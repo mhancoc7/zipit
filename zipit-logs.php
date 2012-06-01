@@ -35,7 +35,7 @@
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Logs</h2></center>
 
-
+<div class="logs">
 <?  
    // Include & Call Class 
    include_once("lib/class.displaylogs.php"); 
@@ -56,6 +56,7 @@
    $lfDispl->returnFormated();   // Output  
 ?> 
 </pre> 
+</div>
 <br>
 <center><font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font></center>
 </div>

@@ -206,3 +206,6 @@ margin-bottom:10px;
 		  right: -20px;
 		}
 
+.logs {
+    border : solid 2px #ff0000; background : #000000; color : #ffffff; padding : 4px; width : 650px; height : 200px; overflow : auto;
+    }
