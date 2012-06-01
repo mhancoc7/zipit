@@ -39,7 +39,7 @@
 
 <?  
    // Include & Call Class 
-   include_once("lib/displaylogs.php"); 
+   include_once("lib/class.displaylogs.php"); 
    $lfDispl = new displayLogfile; 
 
    // Path/Name of Logfile 
