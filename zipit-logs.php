@@ -17,6 +17,66 @@
     $logsize = filesize($zipitlog);
 
 ?>
+
+// truncate function
+define('CHARS', null);
+define('WORDS', null);
+
+function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
+{
+    if(!is_numeric($length))
+    {
+        $length = 25;
+    }
+    
+    if(strlen($string) <= $length)
+    {
+        return $string;
+    }
+    else
+    {
+
+        switch($method)
+        {
+            case CHARS:
+                return substr($string, 0, $length) . $pattern;    
+            break;
+        
+            case WORDS:
+                if (strstr($string, ' ') == false) 
+                {
+                    return str_trim($string, CHARS, $length, $pattern);
+                }
+            
+                $count = 0;
+                $truncated = '';
+                $word = explode(" ", $string);
+
+                
+                foreach($word AS $single)
+                {            
+                    if($count < $length)
+                    {
+                        if(($count + strlen($single)) <= $length)
+                        {
+                            $truncated .= $single . ' ';
+                            $count = $count + strlen($single);
+                            $count++;
+                        }
+                        else if(($count + strlen($single)) >= $length)
+                        {
+                            break;
+                        }
+                    }
+                }
+                        
+                return rtrim($truncated) . $pattern;
+            break;
+        }
+    }
+} 
+
+?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -35,7 +95,13 @@
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Available Logs</h2></center>
+<?php
+     $url = $_SERVER['SERVER_NAME'];
+echo "<center><em>";
+echo str_trim($url, CHARS, 43, '...');
+echo "<br /><br />";
 
+?>
 <div class="logs">
 <?php
    // Include & Call Class 
@@ -46,10 +112,7 @@
    // Choose a short one for example b (!)  
    $filename = "$zipitlog"; 
 
-     $url = $_SERVER['SERVER_NAME'];
-echo "<center><em>";
-echo str_trim($url, CHARS, 43, '...');
-echo "<br /><br />";
+
 ?> 
 <pre style="font-size:12px;"> 
 <?php
