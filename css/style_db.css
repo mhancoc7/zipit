@@ -56,11 +56,11 @@ display:none;
 
 .wrapper{
 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-225px 0 0 -195px;
+	margin:-225px 0 0 -325px;
         background-color:#eee;
         -moz-border-radius: 15px;
         border-radius: 15px;
