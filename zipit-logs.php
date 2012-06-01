@@ -35,13 +35,7 @@
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Available Logs</h2></center>
-<?php
-     $url = $_SERVER['SERVER_NAME'];
-echo "<center><em>";
-echo str_trim($url, CHARS, 43, '...');
-echo "<br /><br />";
 
-?>
 <div class="logs">
 <?php
    // Include & Call Class 
