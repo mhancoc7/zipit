@@ -36,7 +36,6 @@
 <h2>Logs</h2></center>
 
 
-
 <?  
    // Include & Call Class 
    include_once("lib/class.displaylogs.php"); 
@@ -47,9 +46,6 @@
    $filename = "$zipitlog"; 
 
 
-
-
-   // Example a: /////////////////////////////// 
 ?> 
 <pre style="font-size:12px;"> 
 <? 
