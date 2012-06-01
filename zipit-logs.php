@@ -33,7 +33,7 @@
 	</ul></center>
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
-<h2>Logs</h2></center>
+<h2>Available Logs</h2></center>
 
 <div class="logs">
 <?  
