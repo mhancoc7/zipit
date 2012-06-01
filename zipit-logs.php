@@ -43,7 +43,7 @@ echo "<br /><br />";
 
 ?>
 <div class="logs">
-<?  
+<?php
    // Include & Call Class 
    include_once("lib/class.displaylogs.php"); 
    $lfDispl = new displayLogfile; 
@@ -55,7 +55,7 @@ echo "<br /><br />";
 
 ?> 
 <pre style="font-size:12px;"> 
-<? 
+<?php
    $lfDispl->setRowsToRead(100);    // Read 100 rows 
    $lfDispl->setAlign("bottom");       // Last row on top 
    $lfDispl->setFilepath($filename); // from this logfile 
