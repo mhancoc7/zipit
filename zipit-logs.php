@@ -46,7 +46,10 @@
    // Choose a short one for example b (!)  
    $filename = "$zipitlog"; 
 
-
+     $url = $_SERVER['SERVER_NAME'];
+echo "<center><em>";
+echo str_trim($url, CHARS, 43, '...');
+echo "<br /><br />";
 ?> 
 <pre style="font-size:12px;"> 
 <?php
