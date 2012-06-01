@@ -56,7 +56,7 @@
    $lfDispl->returnFormated();   // Output  
 ?> 
 </pre> 
-<br><br><br>
+<br>
 <center><font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font></center>
 </div>
 </body>
