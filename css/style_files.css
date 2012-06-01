@@ -44,11 +44,11 @@ display:none;
 
 .wrapper{
 
-        width:650px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-225px 0 0 -325px;
+	margin:-225px 0 0 -425px;
         background-color:#eee;
         -moz-border-radius: 15px;
         border-radius: 15px;
@@ -207,5 +207,11 @@ margin-bottom:10px;
 		}
 
 .logs {
-    border : solid 2px #ff0000; background : #000000; color : #ffffff; padding : 4px; width : 650px; height : 200px; overflow : auto;
+    border: solid 2px #ff0000;
+    background: #000000;
+    color: #ffffff;
+    padding: 4px; 
+    width: 750px; 
+    height: 600px;
+    overflow: auto;
     }
