@@ -161,7 +161,7 @@ return false;
 
 $url = $_SERVER['SERVER_NAME'];
 echo "<center><em>";
-echo str_trim($url, CHARS, 43, '...');
+echo str_trim($url, CHARS, 143, '...');
 echo "<br /><br />";
 
 // authenticate to Cloud Files
