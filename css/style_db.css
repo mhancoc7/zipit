@@ -117,11 +117,11 @@ margin-bottom:10px;
 
 .tabs { 
     	list-style: none; 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-262px 0 0 -175px;
+	margin:-262px 0 0 -375px;
     }
 		.tabs li { 
 		  /* Makes a horizontal row */
