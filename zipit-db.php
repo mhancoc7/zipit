@@ -151,7 +151,7 @@ return false;
 	<center><ul class="tabs group">
 	  <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
 	  <li class="active"><a href="#" onfocus="this.blur();">Databases</a></li> 
-      <li><a href="zipit-logs.ph" onfocus="this.blur();">Logs</a></li> 
+      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center>
