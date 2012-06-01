@@ -16,7 +16,7 @@
     $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
 
-?>
+
 
 // truncate function
 define('CHARS', null);
