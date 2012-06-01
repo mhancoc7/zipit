@@ -117,6 +117,7 @@ return false;
 	<center><ul class="tabs group">
 	  <li class="active"><a href="#" onfocus="this.blur();">Files</a></li> 
 	  <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
+      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
