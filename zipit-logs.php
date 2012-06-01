@@ -36,7 +36,10 @@
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Available Logs</h2></center>
 <?php
-      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
+     $url = $_SERVER['SERVER_NAME'];
+echo "<center><em>";
+echo str_trim($url, CHARS, 43, '...');
+echo "<br /><br />";
 
 ?>
 <div class="logs">
