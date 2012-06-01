@@ -98,7 +98,7 @@ function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Zipit Backup Utility -- Database Backup</title>
 
-<link href="./css/style_db.css" rel="stylesheet" type="text/css" />
+<link href="./css/style_files.css" rel="stylesheet" type="text/css" />
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
