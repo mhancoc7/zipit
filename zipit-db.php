@@ -238,7 +238,7 @@ echo "<div>
 </div>
 <br /><br />";
 } 
-echo "<input type=\"submit\" name=\"submit\" value=\"Backup\" class=\"backup\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px; margin-left:43px; margin-right:50px;\"/> <input class=\"logout\" readonly type=\"button\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;\" value=\"Logout\" onclick='location = \"zipit-files.php?logout=1\";'/></form>";
+echo "<input type=\"submit\" name=\"submit\" value=\"Backup\" class=\"backup\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px; margin-left:243px; margin-right:50px;\"/> <input class=\"logout\" readonly type=\"button\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;\" value=\"Logout\" onclick='location = \"zipit-files.php?logout=1\";'/></form>";
 
 ?>
 <br><br><br>
