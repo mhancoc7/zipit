@@ -28,14 +28,17 @@
 </head>
 <body>
     <center><ul class="tabs group">
-      <li><a href="#" onfocus="this.blur();">Files</a></li> 
+      <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
       <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
       <li class="active"><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Available Logs</h2></center>
+<?php
+      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
 
+?>
 <div class="logs">
 <?  
    // Include & Call Class 
