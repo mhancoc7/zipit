@@ -117,6 +117,7 @@ return false;
 	<center><ul class="tabs group">
 	  <li class="active"><a href="#" onfocus="this.blur();">Files</a></li> 
 	  <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
+      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
@@ -125,7 +126,7 @@ return false;
 
 $url = $_SERVER['SERVER_NAME'];
 echo "<center><em>";
-echo str_trim($url, CHARS, 43, '...');
+echo str_trim($url, CHARS, 143, '...');
 echo "<br /><br />";
 
 // authenticate to Cloud Files
@@ -169,7 +170,7 @@ foreach ($files as $url) {
 echo "<div class=\"hidden\">$i</div>";
 echo "<div class=\"hidden\">$i</div>";
 echo "<div class=\"tablediv\">";
-echo "<div class=\"leftdiv\" style=\"background-color:$rowColor\"><a href='zipit-download-files.php?file=$url' title=\"Download $url\">"; echo str_trim($url, CHARS, 25, '...'); echo "</a></div>";
+echo "<div class=\"leftdiv\" style=\"background-color:$rowColor\"><a href='zipit-download-files.php?file=$url' title=\"Download $url\">"; echo str_trim($url, CHARS, 135, '...'); echo "</a></div>";
 
 echo "<div class=\"rightdiv\" style=\"background-color:$rowColor\"><a href='zipit-delete-files.php?file=$url' onclick='return check();' title=\"Delete $url\"><img src=\"./images/delete.png\" border=\"0\"/></a></div></div>";
 

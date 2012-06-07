@@ -14,7 +14,7 @@ width:100%;
 .leftdiv {
 float: left; 
 padding-right:35px; 
-width:85%;
+width:90%;
 font-size:14px;
 height:17px;
 }
@@ -27,7 +27,7 @@ height:17px;
 
 .backup {
 float:left;
-margin-left:55px;
+margin-left:255px;
 margin-right:30px; 
 height:28px;
 }
@@ -44,11 +44,11 @@ display:none;
 
 .wrapper{
 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-225px 0 0 -195px;
+	margin:-225px 0 0 -425px;
         background-color:#eee;
         -moz-border-radius: 15px;
         border-radius: 15px;
@@ -104,11 +104,11 @@ margin-bottom:10px;
 
 .tabs { 
     	list-style: none; 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-262px 0 0 -175px;
+	margin:-262px 0 0 -375px;
     }
 		.tabs li { 
 		  /* Makes a horizontal row */
@@ -206,3 +206,15 @@ margin-bottom:10px;
 		  right: -20px;
 		}
 
+.logs {
+    -moz-border-radius-topleft: 10px; 
+    border-top-left-radius: 10px;
+    -moz-border-radius-bottomleft: 10px; 
+    border-bottom-left-radius: 10px;
+    background: #000000;
+    color: #ffffff;
+    padding-left: 14px; 
+    width: 750px; 
+    height: 300px;
+    overflow: auto;
+    }

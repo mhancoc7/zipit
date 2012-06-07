@@ -10,7 +10,7 @@ margin-bottom: 1px;
             -moz-border-radius: 15px;
             border-radius: 15px;
             height:30px;
-            width:200px;
+            width:400px;
             padding-left:8px;
             padding-right:8px;
             margin-bottom:5px;
@@ -26,7 +26,7 @@ width:100%;
 .leftdiv {
 float: left; 
 padding-right:35px; 
-width:85%;
+width:90%;
 font-size:14px;
 height:17px;
 }
@@ -56,11 +56,11 @@ display:none;
 
 .wrapper{
 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-225px 0 0 -195px;
+	margin:-225px 0 0 -425px;
         background-color:#eee;
         -moz-border-radius: 15px;
         border-radius: 15px;
@@ -117,11 +117,11 @@ margin-bottom:10px;
 
 .tabs { 
     	list-style: none; 
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-262px 0 0 -175px;
+	margin:-262px 0 0 -375px;
     }
 		.tabs li { 
 		  /* Makes a horizontal row */

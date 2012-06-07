@@ -7,11 +7,11 @@ margin-bottom: 1px;
 .clear{clear:both;}
 
 .wrapper{
-        width:350px;
+        width:750px;
 	position:absolute;
 	left:50%;
 	top:50%;
-	margin:-241px 0 0 -195px;
+	margin:-241px 0 0 -425px;
         background-color:#eee;
         -moz-border-radius: 15px;
         border-radius: 15px;
