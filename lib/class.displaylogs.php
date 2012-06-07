@@ -1,6 +1,5 @@
 <?       
-  
-class displayLogfile { 
+  class displayLogfile { 
         
       var $rowstoread; 
       var $align; 

@@ -17,7 +17,6 @@
     $logsize = filesize($zipitlog);
 
 
-
 // truncate function
 define('CHARS', null);
 define('WORDS', null);
