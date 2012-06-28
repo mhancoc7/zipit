@@ -6,6 +6,8 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
+ini_set('max_execution_time', 900);
+
 // set default timezone
     date_default_timezone_set('America/Chicago');
     $snaptime = date("H.i");
