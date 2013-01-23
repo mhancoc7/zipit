@@ -14,6 +14,9 @@
 // require zipit configuration
     require('zipit-config.php');
 
+// define url
+    $url = $_SERVER['SERVER_NAME'];
+
 // require Cloud Files API
    require('./api/cloudfiles.php');
 
@@ -64,8 +67,7 @@ catch (Exception $e) {
    die();
 
 }
-
-    $container = $conn->get_container('zipit-backups-files');
+    $container = $conn->get_container("zipit-backups-files-$url");
     $container->delete_object($file);
 echo "<center><input readonly style='border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:300px; color:#000; padding:3px;' type= 'submit' value='Backup Deleted -- Click To Continue' onclick='location = \"zipit-files.php\";'/></a></center>";
 

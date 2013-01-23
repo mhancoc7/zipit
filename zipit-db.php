@@ -12,19 +12,36 @@
 // require zipit configuration
     require('zipit-config.php');
 
-// require Cloud Files API
-   require('./api/cloudfiles.php');
-
 // define zipit log file
     $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
+
+// create zipit log file if it doesn't exist
+if(!file_exists("$zipitlog")) 
+{ 
+   $fp = fopen("$zipitlog","w");  
+   fwrite($fp,"----Zipit Logs----\n\n");  
+   fclose($fp); 
+}
 
 if ($logsize > 52428800) {
 shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
 }
 
-// clean up local backups
-shell_exec("rm -rf ./zipit-backups/databases/*");
+// define url
+    $url = $_SERVER['SERVER_NAME'];
+
+// require Cloud Files API
+   require('./api/cloudfiles.php');
+
+// clean up local backups if files are older than 24 hours (86400 seconds)
+    $dir = "./zipit-backups/databases";
+
+foreach (glob($dir."*") as $file) {
+if (filemtime($file) < time() - 86400) {
+    shell_exec("rm -rf ./zipit-backups/databases/*");
+    }
+}
 
 // create local backups folders if they are not there
 if (!is_dir('./zipit-backups')) {
@@ -151,7 +168,8 @@ return false;
 	<center><ul class="tabs group">
 	  <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
 	  <li class="active"><a href="#" onfocus="this.blur();">Databases</a></li> 
-      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
+          <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
+          <li><a href="zipit-auto.php" onfocus="this.blur();">Setup Auto Backups</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center>
@@ -159,7 +177,6 @@ return false;
 <h2>Available Database Backups</h2></center>
 <?php
 
-$url = $_SERVER['SERVER_NAME'];
 echo "<center><em>";
 echo str_trim($url, CHARS, 143, '...');
 echo "<br /><br />";
@@ -185,7 +202,7 @@ catch (Exception $e) {
    echo "<script>location.href='zipit-db.php?logout=1'</script>";
    die();
 }
-$container = $conn->create_container("zipit-backups-databases");
+$container = $conn->create_container("zipit-backups-databases-$url");
 $files = $container->list_objects();
   
 reset($files);

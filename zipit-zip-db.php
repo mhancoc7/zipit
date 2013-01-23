@@ -10,7 +10,6 @@ ini_set('max_execution_time', 900);
 
 // set default timezone
     date_default_timezone_set('America/Chicago');
-    $snaptime = date("H.i");
 
 // include password protection
     include("zipit-login.php"); 
@@ -21,8 +20,17 @@ ini_set('max_execution_time', 900);
 // set working directory
     chdir("../../..");
 
-// clean up local backups
-    shell_exec("rm -rf ./web/content/zipit/zipit-backups/databases/*");
+// define url
+    $url = $_SERVER['SERVER_NAME'];
+
+// clean up local backups if files are older than 24 hours (86400 seconds)
+    $dir = "./zipit-backups/databases";
+
+foreach (glob($dir."*") as $file) {
+if (filemtime($file) < time() - 86400) {
+    shell_exec("rm -rf ./zipit-backups/databases/*");
+    }
+}
 
 // create local backups folders if they are not there
 if (!is_dir('./web/content/zipit/zipit-backups')) {
@@ -53,44 +61,6 @@ function goBack()
 	</ul></center>
 <div class="head">Zipit Backup Utility</div>
 <?php
-
-if (($snaptime > 11.00) && ($snaptime < 12.05) )  
-{
-  echo '<script type="text/javascript">';
-  echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-  echo '</script>'; 
-  echo "<script>location.href='zipit-files.php'</script>"; 
-}
-
-elseif (($snaptime > 15.00) && ($snaptime < 16.05) ) 
-
-{
-  echo '<script type="text/javascript">';
-  echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-  echo '</script>'; 
-  echo "<script>location.href='zipit-files.php'</script>"; 
-}
-
-elseif (($snaptime > 19.00) && ($snaptime < 20.05) ) 
-
-{
-  echo '<script type="text/javascript">';
-  echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-  echo '</script>'; 
-  echo "<script>location.href='zipit-files.php'</script>"; }
-
-elseif (($snaptime > 23.00) && ($snaptime < 24.05) ) 
-
-{
-  echo '<script type="text/javascript">';
-  echo 'alert("Due to server constraints Zipit Backup cannot be run at this time.\n\n Please try again later.")';
-  echo '</script>'; 
-  echo "<script>location.href='zipit-files.php'</script>"; 
-}
- 
-else 
-
-{
 
 // define zipit log file
     $zipitlog = "logs/zipit.log";
@@ -124,7 +94,7 @@ catch (Exception $e) {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    echo "<script>location.href='zipit-db.php?logout=1'</script>";
@@ -272,6 +242,44 @@ class ProgressBar {
 }
 echo '<center>';
 
+// check database size
+function file_size_info($filesize) { 
+ $bytes = array('KB', 'KB', 'MB', 'GB', 'TB'); # values are always displayed  
+ if ($filesize < 1024) $filesize = 1; # in at least kilobytes. 
+ for ($i = 0; $filesize > 1024; $i++) $filesize /= 1024; 
+ $file_size_info['size'] = ceil($filesize); 
+ $file_size_info['type'] = $bytes[$i]; 
+ return $file_size_info; 
+} 
+
+$db_link = @mysql_connect($db_host, $db_user, $db_pass) 
+ or exit('Could not connect: ' . mysql_error()); 
+$db = @mysql_select_db($db_name, $db_link) 
+ or exit('Could not select database: ' . mysql_error()); 
+// Calculate DB size by adding table size + index size: 
+$rows = mysql_query("SHOW TABLE STATUS"); 
+$dbSize = 0; 
+while ($row = mysql_fetch_array($rows)) { 
+ $dbSize += $row['Data_length'] + $row['Index_length']; 
+} 
+
+if ($dbSize > 4831838208) {
+
+// alert Cloud Files object size exceeded
+   echo '<script type="text/javascript">';
+   echo 'alert("Backup Failed!\n\nCloud Files max object size of 5GB exceeded.\n\nPlease reduce the size of your database and try again.")';
+   echo '</script>';  
+
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Zipit Failed, Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit completed\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
+   echo "<script>location.href='zipit-db.php'</script>";
+   die();
+}
+
 // start progress bar
     $p = new ProgressBar();
     echo '<div style="width: 300px;">';
@@ -307,26 +315,6 @@ for ($i = 0; $i < ($size = 100); $i++) {
 }
     }
 
-// check file size
-if (filesize('$url-$timestamp.zip') > 5261334937) { 
-// alert Cloud Files object size exceeded
-   echo '<script type="text/javascript">';
-   echo 'alert("Backup Failed!\n\nCloud Files max object size of 5GB exceeded.\n\nPlease reduce the size of your database and try again.")';
-   echo '</script>';  
-
-// clean up local backups
-   shell_exec('rm -rf ./web/content/zipit/zipit-backups/databases/*');
-
-// write to log
-   $logtimestamp =  date("M-d-Y_H-i-s");
-   $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zip Failed, Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit completed\n\n";
-   fwrite($fh, $stringData);
-   fclose($fh);
-   echo "<script>location.href='zipit-db.php'</script>";
-   die();
-}
-
 // get file to transfer to Cloud Files
     $res  = fopen("./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.zip", "rb");
     $temp = tmpfile();
@@ -342,7 +330,7 @@ if (filesize('$url-$timestamp.zip') > 5261334937) {
     fseek($temp, 0);
 
 // create zipit-backups-files Cloud Files container if it does exist and send file to zipit-backups-files container
-    $container = $conn->create_container("zipit-backups-databases");
+    $container = $conn->create_container("zipit-backups-databases-$url");
     $container->make_private();
     
 // write to log
@@ -399,7 +387,7 @@ else {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zip Failed, MD5 Hash did not match on $db_name-$timestamp.zip\n$logtimestamp Zipit completed\n\n";
+   $stringData = "$logtimestamp -- Zipit Failed, MD5 Hash did not match on $db_name-$timestamp.zip\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    echo "<script>location.href='zipit-files.php'</script>";
@@ -412,11 +400,9 @@ echo "<script>location.href='zipit-download-db.php?file=$db_name-$timestamp.zip'
 // write to log 
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zip Completed Successfully for $db_name-$timestamp.zip\n$logtimestamp Zipit completed\n\n";
+   $stringData = "$logtimestamp -- Zipit Completed Successfully for $db_name-$timestamp.zip\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-
-}
 
 ?>
 </div>

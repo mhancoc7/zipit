@@ -14,6 +14,9 @@ $file = $_GET["file"];
 // require zipit configuration
     require('zipit-config.php');
 
+// define url
+    $url = $_SERVER['SERVER_NAME'];
+
 // define zipit log file
     $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
@@ -51,7 +54,7 @@ catch (Exception $e) {
    die();
 } 
 
-$container = $conn->get_container("zipit-backups-databases");
+$container = $conn->get_container("zipit-backups-databases-$url");
 $object = $container->get_object("$file");
  
 $output = fopen("php://output", "w");

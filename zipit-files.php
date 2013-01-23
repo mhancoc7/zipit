@@ -16,15 +16,32 @@
     $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
 
+// create zipit log file if it doesn't exist
+if(!file_exists("$zipitlog")) 
+{ 
+   $fp = fopen("$zipitlog","w");  
+   fwrite($fp,"----Zipit Logs----\n\n");  
+   fclose($fp); 
+}
+
 if ($logsize > 52428800) {
 shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
 }
 
+// define url
+    $url = $_SERVER['SERVER_NAME'];
+
 // require Cloud Files API
    require('./api/cloudfiles.php');
 
-// clean up local backups
-shell_exec("rm -rf ./zipit-backups/files/*");
+// clean up local backups if files are older than 24 hours (86400 seconds)
+    $dir = "./zipit-backups/files";
+
+foreach (glob($dir."*") as $file) {
+if (filemtime($file) < time() - 86400) {
+    shell_exec("rm -rf ./zipit-backups/files/*");
+    }
+}
 
 // create local backups folders if they are not there
 if (!is_dir('./zipit-backups')) {
@@ -117,14 +134,14 @@ return false;
 	<center><ul class="tabs group">
 	  <li class="active"><a href="#" onfocus="this.blur();">Files</a></li> 
 	  <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
-      <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
+          <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
+          <li><a href="zipit-auto.php" onfocus="this.blur();">Setup Auto Backups</a></li> 
 	</ul></center>
 <div class="wrapper">
 <center><div class="head">Zipit Backup Utility</div>
 <h2>Available File Backups</h2></center>
 <?php
 
-$url = $_SERVER['SERVER_NAME'];
 echo "<center><em>";
 echo str_trim($url, CHARS, 143, '...');
 echo "<br /><br />";
@@ -151,7 +168,7 @@ catch (Exception $e) {
    die();
 }
 
-$container = $conn->create_container("zipit-backups-files");
+$container = $conn->create_container("zipit-backups-files-$url");
 $files = $container->list_objects();
   
 reset($files);
@@ -179,6 +196,7 @@ echo "<div class=\"clear\"></div>";
 }
 
 echo "</em></center><br /><br />";
+
 ?>
 <center><input class="backup" readonly style="border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;" type="submit" value="Backup" onclick="location = 'zipit-zip-files.php';"/>
 <input class="logout" readonly  style="border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;" type="submit" value="Logout" onclick="location = 'zipit-files.php?logout=1';"/><br><br><br>
