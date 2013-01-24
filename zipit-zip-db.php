@@ -242,6 +242,11 @@ class ProgressBar {
 }
 echo '<center>';
 
+// start progress bar
+    $p = new ProgressBar();
+    echo '<div style="width: 300px;">';
+    $p->render();
+
 // check database size
 function file_size_info($filesize) { 
  $bytes = array('KB', 'KB', 'MB', 'GB', 'TB'); # values are always displayed  
@@ -255,6 +260,7 @@ function file_size_info($filesize) {
 $db_link = @mysql_connect($db_host, $db_user, $db_pass) 
  or exit('Could not connect: ' . mysql_error()); 
 $db = @mysql_select_db($db_name, $db_link) 
+
  or exit('Could not select database: ' . mysql_error()); 
 // Calculate DB size by adding table size + index size: 
 $rows = mysql_query("SHOW TABLE STATUS"); 
@@ -279,11 +285,6 @@ if ($dbSize > 4831838208) {
    echo "<script>location.href='zipit-db.php'</script>";
    die();
 }
-
-// start progress bar
-    $p = new ProgressBar();
-    echo '<div style="width: 300px;">';
-    $p->render();
 
 // set timestamp format
     $timestamp =  date("M-d-Y_H-i-s");

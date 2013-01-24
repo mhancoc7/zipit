@@ -212,6 +212,11 @@ class ProgressBar {
 }
 echo '<center>';
 
+// start progress bar
+    $p = new ProgressBar();
+    echo '<div style="width: 300px;">';
+    $p->render();
+
 // check file size
 function recursive_filesize($dir) 
 { 
@@ -242,6 +247,7 @@ if ($site_size > 4608) {
    echo 'alert("Backup Failed!\n\nCloud Files max object size of 5GB exceeded.\n\nPlease reduce the size of your content and try again.")';
    echo '</script>';  
 
+
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
@@ -252,11 +258,6 @@ if ($site_size > 4608) {
    die();
 
 }
-
-// start progress bar
-    $p = new ProgressBar();
-    echo '<div style="width: 300px;">';
-    $p->render();
 
 // set timestamp format
     $timestamp =  date("M-d-Y_H-i-s"); 
