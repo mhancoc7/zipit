@@ -6,7 +6,10 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
-ini_set('max_execution_time', 900);
+// specify namespace
+   namespace OpenCloud;
+
+ini_set('max_execution_time', 3600);
 
 // set default timezone
     date_default_timezone_set('America/Chicago');
@@ -76,15 +79,24 @@ if ($logsize > 52428800) {
 shell_exec("mv logs/zipit.log logs/zipit_old.log");
 }
 
+define('RAXSDK_TIMEOUT', '3600');
+
 // require Cloud Files API
-   require('./web/content/zipit/api/cloudfiles.php');
+   require_once('./web/content/zipit/api/lib/rackspace.php');
 
 // authenticate to Cloud Files
 try {
-    $auth = new CF_Authentication($username,$key);
-    $auth->authenticate();
-    $auth->ssl_use_cabundle();
-    $conn = new CF_Connection($auth,$servicenet=false);
+// my credentials
+define('AUTHURL', 'https://identity.api.rackspacecloud.com/v2.0/');
+$mysecret = array(
+    'username' => $username,
+    'apiKey' => $key
+);
+
+// establish our credentials
+$connection = new Rackspace(AUTHURL, $mysecret);
+// now, connect to the ObjectStore service
+$ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
     
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -93,7 +105,7 @@ try {
    fwrite($fh, $stringData);
    fclose($fh);
 }
-catch (Exception $e) {
+catch (HttpUnauthorizedError $e) {
    echo '<script type="text/javascript">';
    echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
    echo '</script>'; 
@@ -271,7 +283,6 @@ if ($site_size > 4608) {
 
 // set the command to run
     $cmd = "zip -9pr ./web/content/zipit/zipit-backups/files/$url-$timestamp.zip lib web logs";
-
     $pipe = popen($cmd, 'r');
 
     if (empty($pipe)) {
@@ -290,23 +301,9 @@ for ($i = 0; $i < ($size = 100); $i++) {
 }
     }
 
-// get file to transfer to Cloud Files
-    $res  = fopen("./web/content/zipit/zipit-backups/files/$url-$timestamp.zip", "rb");
-    $temp = tmpfile();
-    $size = 0.0;
-    while (!feof($res))
-    {
-        $bytes = fread($res, 1024);
-        fwrite($temp, $bytes);
-        $size += (float) strlen($bytes);
-    }
-
-    fclose($res);
-    fseek($temp, 0);
-
-// create zipit-backups-files Cloud Files container if it does exist and send file to zipit-backups-files container
-    $container = $conn->create_container("zipit-backups-files-$url");
-    $container->make_private();
+// create container if it doesn't already exist
+$cont = $ostore->Container();
+$cont->Create(array('name'=>"zipit-backups-files-$url"));
     
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -316,17 +313,12 @@ for ($i = 0; $i < ($size = 100); $i++) {
    fclose($fh);
 
 // set zipit object
-    $object = $container->create_object("$url-$timestamp.zip");
-    $object->content_type = "application/zip";
-    $object->write($temp, $size);
+$obj = $cont->DataObject();
 
-// end progress bar
-   $p->setProgressBarProgress(100);
-    pclose($pipe);
+$obj->Create(array('name' => "$url-$timestamp.zip", 'content_type' => 'application/zip'), $filename="./web/content/zipit/zipit-backups/files/$url-$timestamp.zip");
 
 // get etag(md5)
-    $etag = $object->getETag();
-    fclose($temp);
+   $etag = $obj->hash;
 
 // generate md5 hash
     $md5file = "./web/content/zipit/zipit-backups/files/$url-$timestamp.zip";
@@ -349,7 +341,7 @@ for ($i = 0; $i < ($size = 100); $i++) {
 else {
 
 // remove file from Cloud Files
-   $container->delete_object("$url-$timestamp.zip");
+   $obj->Delete(array('name'=>"$url-$timestamp.zip"));
 
 // remove local file
    shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
@@ -368,9 +360,12 @@ else {
    echo "<script>location.href='zipit-files.php'</script>";
    die();
 }
+
+// end progress bar
+   $p->setProgressBarProgress(100);
+    pclose($pipe);
     
    echo "<center><input readonly style='border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:300px; color:#000; padding:3px;' type= 'submit' value='Backup Complete -- Click To Continue' onclick='location = \"zipit-files.php\";'/></a></center>";
-   echo "<script>location.href='zipit-download-files.php?file=$url-$timestamp.zip'</script>";
 
 // write to log 
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -380,6 +375,7 @@ else {
    fclose($fh);
 
 ?>
+
 </div>
 </body>
 </html>

@@ -6,6 +6,9 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
+// specify namespace
+   namespace OpenCloud;
+
 // include password protection
     include("zipit-login.php"); 
 
@@ -32,7 +35,7 @@ shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
     $url = $_SERVER['SERVER_NAME'];
 
 // require Cloud Files API
-   require('./api/cloudfiles.php');
+   require_once('./api/lib/rackspace.php');
 
 // clean up local backups if files are older than 24 hours (86400 seconds)
     $dir = "./zipit-backups/files";
@@ -49,64 +52,6 @@ mkdir('./zipit-backups');
 }
 if (!is_dir('./zipit-backups/files')) {
 mkdir('./zipit-backups/files');
-}
-
-// truncate function
-define('CHARS', null);
-define('WORDS', null);
-
-function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
-{
-    if(!is_numeric($length))
-    {
-        $length = 25;
-    }
-    
-    if(strlen($string) <= $length)
-    {
-        return $string;
-    }
-    else
-    {
-
-        switch($method)
-        {
-            case CHARS:
-                return substr($string, 0, $length) . $pattern;    
-            break;
-        
-            case WORDS:
-                if (strstr($string, ' ') == false) 
-                {
-                    return str_trim($string, CHARS, $length, $pattern);
-                }
-            
-                $count = 0;
-                $truncated = '';
-                $word = explode(" ", $string);
-
-                
-                foreach($word AS $single)
-                {            
-                    if($count < $length)
-                    {
-                        if(($count + strlen($single)) <= $length)
-                        {
-                            $truncated .= $single . ' ';
-                            $count = $count + strlen($single);
-                            $count++;
-                        }
-                        else if(($count + strlen($single)) >= $length)
-                        {
-                            break;
-                        }
-                    }
-                }
-                        
-                return rtrim($truncated) . $pattern;
-            break;
-        }
-    }
 } 
 
 ?>
@@ -118,17 +63,6 @@ function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
 
 <link href="./css/style_files.css" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript">
-function check(){
-var r = confirm("Are you sure you want to delete this backup? \n\nThis will remove your backup from your Cloud Files account permanantly!\n\nBe sure that you are not currently downloading this backup before proceeding.");
-if(r){
-return true;
-}
-else{
-return false;
-}
-}
-</script>
 </head>
 <body>
 	<center><ul class="tabs group">
@@ -143,17 +77,25 @@ return false;
 <?php
 
 echo "<center><em>";
-echo str_trim($url, CHARS, 143, '...');
-echo "<br /><br />";
+echo "<br />";
 
 // authenticate to Cloud Files
 try {
-    $auth = new CF_Authentication($username,$key);
-    $auth->authenticate();
-    $auth->ssl_use_cabundle();
-    $conn = new CF_Connection($auth,$servicenet=false);
+// my credentials
+define('AUTHURL', 'https://identity.api.rackspacecloud.com/v2.0/');
+$mysecret = array(
+    'username' => $username,
+    'apiKey' => $key
+);
+
+// establish our credentials
+$connection = new Rackspace(AUTHURL, $mysecret);
+// now, connect to the ObjectStore service
+$ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
+
 }
-catch (Exception $e) {
+
+catch (HttpUnauthorizedError $e) {
    echo '<script type="text/javascript">';
    echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
    echo '</script>'; 
@@ -168,36 +110,25 @@ catch (Exception $e) {
    die();
 }
 
-$container = $conn->create_container("zipit-backups-files-$url");
-$files = $container->list_objects();
+// create container if it doesn't already exist
+$cont = $ostore->Container();
+$cont->Create(array('name'=>"zipit-backups-files-$url"));
+
+$list = $cont->ObjectList();
+
+while($o = $list->Next())
+	echo $o->name ."<br/>";
+        echo"<br/>";
   
-reset($files);
-
-if(empty($files)) echo 'No Backups Available';
-
-$i = 1;
-
-foreach ($files as $url) {
-
- if ($i % 2 != 0) # An odd row
-    $rowColor = "#ccc";
-  else # An even row
-    $rowColor = "#ddd";
-
-echo "<div class=\"hidden\">$i</div>";
-echo "<div class=\"hidden\">$i</div>";
-echo "<div class=\"tablediv\">";
-echo "<div class=\"leftdiv\" style=\"background-color:$rowColor\"><a href='zipit-download-files.php?file=$url' title=\"Download $url\">"; echo str_trim($url, CHARS, 135, '...'); echo "</a></div>";
-
-echo "<div class=\"rightdiv\" style=\"background-color:$rowColor\"><a href='zipit-delete-files.php?file=$url' onclick='return check();' title=\"Delete $url\"><img src=\"./images/delete.png\" border=\"0\"/></a></div></div>";
-
-$i++;
-echo "<div class=\"clear\"></div>";
-}
-
-echo "</em></center><br /><br />";
+echo "You can manage your backups via the <a href='https://mycloud.rackspace.com/a/$username/files' target='_blank'>Cloud Files control panel</a>";	
+echo "<br/></br/>";
+echo "If your browser \"times out\" the backup process will most likely continue in the background.";
+echo "<br/>";
+echo "However, it does indicate that your backup is quite large and may take some time to complete.";
+echo "</center></em>";
 
 ?>
+<br/><br/>
 <center><input class="backup" readonly style="border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;" type="submit" value="Backup" onclick="location = 'zipit-zip-files.php';"/>
 <input class="logout" readonly  style="border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;" type="submit" value="Logout" onclick="location = 'zipit-files.php?logout=1';"/><br><br><br>
 <font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font></center>

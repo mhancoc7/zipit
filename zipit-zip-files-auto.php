@@ -6,7 +6,10 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
-ini_set('max_execution_time', 900); 
+// specify namespace
+   namespace OpenCloud;
+
+ini_set('max_execution_time', 3600); 
 
 // require zipit configuration
     require('zipit-config.php');
@@ -72,15 +75,24 @@ if (!is_dir('./web/content/zipit/zipit-backups/files')) {
     mkdir('./web/content/zipit/zipit-backups/files');
 }
 
+define('RAXSDK_TIMEOUT', '3600');
+
 // require Cloud Files API
-   require('./web/content/zipit/api/cloudfiles.php');
+   require_once('./web/content/zipit/api/lib/rackspace.php');
 
 // authenticate to Cloud Files
 try {
-    $auth = new CF_Authentication($username,$key);
-    $auth->authenticate();
-    $auth->ssl_use_cabundle();
-    $conn = new CF_Connection($auth,$servicenet=false);
+// my credentials
+define('AUTHURL', 'https://identity.api.rackspacecloud.com/v2.0/');
+$mysecret = array(
+    'username' => $username,
+    'apiKey' => $key
+);
+
+// establish our credentials
+$connection = new Rackspace(AUTHURL, $mysecret);
+// now, connect to the ObjectStore service
+$ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
     
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -90,7 +102,7 @@ try {
    fwrite($fh, $stringData);
    fclose($fh);
 }
-catch (Exception $e) {
+catch (HttpUnauthorizedError $e) {
 
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -173,23 +185,9 @@ if ($site_size > 4608) {
 
     pclose($pipe);
 
-// get file to transfer to Cloud Files
-    $res  = fopen("./web/content/zipit/zipit-backups/files/$url-$timestamp.zip", "rb");
-    $temp = tmpfile();
-    $size = 0.0;
-    while (!feof($res))
-    {
-        $bytes = fread($res, 1024);
-        fwrite($temp, $bytes);
-        $size += (float) strlen($bytes);
-    }
-
-    fclose($res);
-    fseek($temp, 0);
-
-// create zipit-backups-files Cloud Files container if it does exist and send file to zipit-backups-files container
-    $container = $conn->create_container("zipit-backups-files-$url");
-    $container->make_private();
+// create container if it doesn't already exist
+$cont = $ostore->Container();
+$cont->Create(array('name'=>"zipit-backups-files-$url"));
     
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -199,13 +197,13 @@ if ($site_size > 4608) {
    fwrite($fh, $stringData);
    fclose($fh);
 
-    $object = $container->create_object("$url-$timestamp.zip");
-    $object->content_type = "application/zip";
-    $object->write($temp, $size);
+// set zipit object
+$obj = $cont->DataObject();
+
+$obj->Create(array('name' => "$url-$timestamp.zip", 'content_type' => 'application/zip'), $filename="./web/content/zipit/zipit-backups/files/$url-$timestamp.zip");
 
 // get etag(md5)
-    $etag = $object->getETag();
-    fclose($temp);
+   $etag = $obj->hash;
 
 // generate md5 hash
     $md5file = "./web/content/zipit/zipit-backups/files/$url-$timestamp.zip";
@@ -229,7 +227,7 @@ if ($site_size > 4608) {
 else {
 
 // remove file from Cloud Files
-   $container->delete_object("$url-$timestamp.zip");
+   $obj->Delete(array('name'=>"$url-$timestamp.zip"));
 
 // remove local file
    shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
