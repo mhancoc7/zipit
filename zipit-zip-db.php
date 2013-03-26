@@ -23,9 +23,6 @@ ini_set('max_execution_time', 3600);
 // set working directory
     chdir("../../..");
 
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 // clean up local backups if files are older than 24 hours (86400 seconds)
     $dir = "./zipit-backups/databases";
 
@@ -62,7 +59,7 @@ function goBack()
 <div class="wrapper">
 	<center><ul class="tabs group">
 	</ul></center>
-<div class="head">Zipit Backup Utility</div>
+
 <?php
 
 // define zipit log file
@@ -100,7 +97,7 @@ $ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
 }
 catch (HttpUnauthorizedError $e) {
    echo '<script type="text/javascript">';
-   echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
+   echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials.")';
    echo '</script>'; 
 
 // write to log
@@ -109,7 +106,7 @@ catch (HttpUnauthorizedError $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-db.php?logout=1'</script>";
+   echo "<script>location.href='zipit-settings.php'</script>";
    die();
 }
 

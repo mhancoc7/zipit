@@ -26,9 +26,6 @@ ini_set('max_execution_time', 3600);
 // set working directory
     chdir("../../..");
 
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 // define zipit log file
     $zipitlog = "logs/zipit.log";
     $logsize = filesize($zipitlog);
@@ -66,7 +63,6 @@ else {
    die();
 
 }
-
 
 // clean up local backups if files are older than 24 hours (86400 seconds)
     $dir = "./zipit-backups/databases";

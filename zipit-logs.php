@@ -12,9 +12,6 @@
 // require zipit configuration
     require('zipit-config.php');
 
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 // define zipit log file
     $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
@@ -93,10 +90,18 @@ function str_trim($string, $method = 'WORDS', $length = 25, $pattern = '...')
       <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
       <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
       <li class="active"><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
-      <li><a href="zipit-auto.php" onfocus="this.blur();">Setup Auto Backups</a></li> 
+      <li><a href="zipit-auto.php" onfocus="this.blur();">Auto Backups</a></li> 
+      <li><a href="zipit-settings.php" onfocus="this.blur();">Settings</a></li>
 	</ul></center>
 <div class="wrapper">
-<center><div class="head">Zipit Backup Utility</div>
+<center>
+<?php
+
+
+// include update checker
+    include("zipit-update-footer.php");
+
+?>
 <h2>Available Logs</h2></center>
 <?php
 echo "<center><em>";
@@ -126,8 +131,7 @@ echo "</em></center><br />";
 ?> 
 </pre> 
 </div>
-<br>
-<center><font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font></center>
+
 </div>
 </body>
 </html>

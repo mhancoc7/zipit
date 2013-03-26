@@ -14,31 +14,24 @@ ini_set('max_execution_time', 3600);
 // require zipit configuration
     require('zipit-config.php');
 
-// set working directory
-    chdir("../../..");
-
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 // define zipit log file
-    $zipitlog = "logs/zipit.log";
+    $zipitlog = "../../../logs/zipit.log";
     $logsize = filesize($zipitlog);
 
 if ($logsize > 52428800) {
-shell_exec("mv logs/zipit.log logs/zipit_old.log");
+shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
 }
 
-// check auto hash
+// check hash
    $id = $_GET['id'];
 
    if ($auto_hash == $id) {
 
-echo $id;
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp Zipit Auto started\n$logtimestamp -- Zipit Auto hash id correct.\n";
-   echo "$logtimestamp Zipit Auto started\n$logtimestamp -- Zipit Auto hash id correct.\n";
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit hash id correct.\n";
+   echo "$logtimestamp Zipit started\n$logtimestamp -- Zipit hash id correct.\n";
    fwrite($fh, $stringData);
    fclose($fh);
 
@@ -50,35 +43,29 @@ else {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp Zipit Auto started\n$logtimestamp -- Zipit Auto Failed, Auto hash id incorrect.\n$logtimestamp Zipit Auto completed\n\n";
-   echo "$logtimestamp Zipit Auto started\n$logtimestamp -- Zipit Auto Failed, Auto hash id incorrect.\n$logtimestamp Zipit Auto completed\n\n";
+   $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Zipit Failed, hash id incorrect.\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp Zipit started\n$logtimestamp -- Zipit Failed, hash id incorrect.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    die();
 
 }
 
-// clean up local backups if files are older than 24 hours (86400 seconds)
-    $dir = "./zipit-backups/files";
-
-foreach (glob($dir."*") as $file) {
-if (filemtime($file) < time() - 86400) {
-    shell_exec("rm -rf ./zipit-backups/files/*");
-    }
-}
+// remove left over local backups
+   shell_exec("rm -rf ./zipit-backups/files/*");
 
 // create local backups folders if they are not there
-if (!is_dir('./web/content/zipit/zipit-backups')) {
-    mkdir('./web/content/zipit/zipit-backups');
+if (!is_dir('./zipit-backups')) {
+    mkdir('./zipit-backups');
 }
-if (!is_dir('./web/content/zipit/zipit-backups/files')) {
-    mkdir('./web/content/zipit/zipit-backups/files');
+if (!is_dir('./zipit-backups/files')) {
+    mkdir('./zipit-backups/files');
 }
 
 define('RAXSDK_TIMEOUT', '3600');
 
 // require Cloud Files API
-   require_once('./web/content/zipit/api/lib/rackspace.php');
+   require_once('./api/lib/rackspace.php');
 
 // authenticate to Cloud Files
 try {
@@ -97,8 +84,8 @@ $ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit Auto connected to Cloud Files successful.\n";
-   echo "$logtimestamp -- Zipit Auto connected to Cloud Files successful.\n";
+   $stringData = "$logtimestamp -- Zipit connected to Cloud Files successful.\n";
+   echo "$logtimestamp -- Zipit connected to Cloud Files successful.\n";
    fwrite($fh, $stringData);
    fclose($fh);
 }
@@ -107,8 +94,8 @@ catch (HttpUnauthorizedError $e) {
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit Auto completed\n\n";
-   echo "$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit Auto completed\n\n";
+   $stringData = "$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    die();
@@ -120,50 +107,13 @@ catch (HttpUnauthorizedError $e) {
 // write to log
     $logtimestamp =  date("M-d-Y_H-i-s"); 
     $fh = fopen($zipitlog, 'a') or die("can't open file");
-    $stringData = "$logtimestamp -- Zipit Auto creation for $url-$timestamp.zip\n";
-    echo "$logtimestamp -- Zipit Auto creation for $url-$timestamp.zip\n";
+    $stringData = "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
+    echo "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
     fwrite($fh, $stringData);
     fclose($fh);
 
-// check file size
-function recursive_filesize($dir) 
-{ 
-        if (!($dh = opendir($dir))) return 0; 
-
-        $total = 0; 
-        while (($file = readdir($dh)) !== false) 
-        { 
-                if ($file != '.' && $file != '..') 
-                { 
-                        $file = $dir . '/' . $file; 
-                        if (is_dir($file) && is_readable($file) && !is_link($file)) 
-                                $total += recursive_filesize($file); 
-                        else 
-                                $total += filesize($file); 
-                } 
-        } 
-        closedir($dh); 
-        return $total; 
-} 
-
-$site_size = number_format((recursive_filesize(".")/1024/1024)); 
-
-if ($site_size > 4608) {
-
-// Cloud Files object size exceeded  
-
-// write to log
-   $logtimestamp =  date("M-d-Y_H-i-s");
-   $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit Auto Failed, Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit Auto completed\n\n";
-   echo "$logtimestamp -- Zipit Auto Failed, Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit Auto completed\n\n";
-   fwrite($fh, $stringData);
-   fclose($fh);
-   die();
-}
-
 // set the command to run
-    $cmd = "zip -9pr ./web/content/zipit/zipit-backups/files/$url-$timestamp.zip lib web logs";
+    $cmd = "php zipit-check-site-size-worker.php $auto_hash && php zipit-zip-files-worker.php $auto_hash && php zipit-cf-files-worker.php $auto_hash";
 
     $pipe = popen($cmd, 'r');
 
@@ -185,71 +135,74 @@ if ($site_size > 4608) {
 
     pclose($pipe);
 
-// create container if it doesn't already exist
-$cont = $ostore->Container();
-$cont->Create(array('name'=>"zipit-backups-files-$url"));
-    
-// write to log
-   $logtimestamp =  date("M-d-Y_H-i-s");
-   $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Cloud Files container successfully created or already exists.\n";
-   echo "$logtimestamp -- Cloud Files container successfully created or already exists.\n";
-   fwrite($fh, $stringData);
-   fclose($fh);
 
-// set zipit object
-$obj = $cont->DataObject();
-
-$obj->Create(array('name' => "$url-$timestamp.zip", 'content_type' => 'application/zip'), $filename="./web/content/zipit/zipit-backups/files/$url-$timestamp.zip");
-
-// get etag(md5)
-   $etag = $obj->hash;
-
-// generate md5 hash
-    $md5file = "./web/content/zipit/zipit-backups/files/$url-$timestamp.zip";
-    $md5 = md5_file($md5file);
-
-// compare md5 with etag
-    if ($md5 == $etag) {
-
-// clean up local backups
-   shell_exec('rm -rf ./web/content/zipit/zipit-backups/files/*');
    
-// write to log
-   $logtimestamp =  date("M-d-Y_H-i-s");
-   $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit Auto backup moved to Cloud Files successful. MD5 Hash check passed.\n";
-   echo "$logtimestamp -- Zipit Auto backup moved to Cloud Files successful. MD5 Hash check passed.\n";
-   fwrite($fh, $stringData);
-   fclose($fh);
-}
+$hash_check = file_get_contents('zipit-hash-check-files.php');
+   $site_size = file_get_contents('zipit-site-size.php');
+   $api_check = file_get_contents('zipit-api-check-files.php');
+   $md5_check = file_get_contents('zipit-md5-check-files.php');
 
-else {
-
-// remove file from Cloud Files
-   $obj->Delete(array('name'=>"$url-$timestamp.zip"));
-
-// remove local file
-   shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
-
-// MD5 mismatch  
+   if ($hash_check != 'pass') {
 
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit Auto Failed, MD5 Hash did not match on $url-$timestamp.zip\n$logtimestamp Zipit Auto completed\n\n";
-   echo "$logtimestamp -- Zipit Auto Failed, MD5 Hash did not match on $url-$timestamp.zip\n$logtimestamp Zipit Auto completed\n\n";
+   $stringData = "$logtimestamp -- Backup Failed! Authentication not verified.\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Backup Failed! Authentication not verified.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
    die();
 }
-   
+
+elseif ($site_size > 4608) {
+
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Backup Failed! Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Backup Failed! Cloud Files max object size of 5GB exceeded.\n$logtimestamp Zipit completed\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
+   die();
+
+}
+
+   elseif ($api_check == 'fail') {
+
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Backup Failed! Cloud Files Authentication Failed!\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Backup Failed! Cloud Files Authentication Failed!\n$logtimestamp Zipit completed\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
+   die();
+
+}
+
+elseif ($md5_check != 'pass') {
+
+// write to log
+   $logtimestamp =  date("M-d-Y_H-i-s");
+   $fh = fopen($zipitlog, 'a') or die("can't open file");
+   $stringData = "$logtimestamp -- Backup Failed! Integrity check failed.\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Backup Failed! Integrity check failed.\n$logtimestamp Zipit completed\n\n";
+   fwrite($fh, $stringData);
+   fclose($fh);
+   die();
+
+}
+
+else {
+
 // write to log 
    $logtimestamp =  date("M-d-Y_H-i-s");
    $fh = fopen($zipitlog, 'a') or die("can't open file");
-   $stringData = "$logtimestamp -- Zipit Auto Completed Successfully for $url-$timestamp.zip\n$logtimestamp Zipit Auto completed\n\n";
-   echo "$logtimestamp -- Zipit Auto Completed Successfully for $url-$timestamp.zip\n$logtimestamp Zipit Auto completed\n\n";
+   $stringData = "$logtimestamp -- Zipit Completed Successfully!\n$logtimestamp Zipit completed\n\n";
+   echo "$logtimestamp -- Zipit Completed Successfully!\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
+
+}
 
 ?>

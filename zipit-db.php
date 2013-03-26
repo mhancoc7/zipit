@@ -31,9 +31,6 @@ if ($logsize > 52428800) {
 shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
 }
 
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 // require Cloud Files API
    require_once('./api/lib/rackspace.php');
 
@@ -104,11 +101,18 @@ $(document).ready(function() {
 	  <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
 	  <li class="active"><a href="#" onfocus="this.blur();">Databases</a></li> 
           <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
-          <li><a href="zipit-auto.php" onfocus="this.blur();">Setup Auto Backups</a></li> 
+          <li><a href="zipit-auto.php" onfocus="this.blur();">Auto Backups</a></li> 
+          <li><a href="zipit-settings.php" onfocus="this.blur();">Settings</a></li>
 	</ul></center>
 <div class="wrapper">
 <center>
-<div class="head">Zipit Backup Utility</div>
+<?php
+
+
+// include update checker
+    include("zipit-update-footer.php");
+
+?>
 <h2>Available Database Backups</h2></center>
 <?php
 
@@ -133,7 +137,7 @@ $ostore = $connection->ObjectStore('cloudFiles', "$datacenter");
 
 catch (HttpUnauthorizedError $e) {
    echo '<script type="text/javascript">';
-   echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials in the zipit-config.php file.")';
+   echo 'alert("Cloud Files API connection could not be established.\n\nBe sure to check your API credentials.")';
    echo '</script>';  
 
 // write to log
@@ -142,7 +146,7 @@ catch (HttpUnauthorizedError $e) {
    $stringData = "$logtimestamp Zipit started\n$logtimestamp -- Cloud Files API connection could not be established.\n$logtimestamp Zipit completed\n\n";
    fwrite($fh, $stringData);
    fclose($fh);
-   echo "<script>location.href='zipit-db.php?logout=1'</script>";
+   echo "<script>location.href='zipit-settings.php'</script>";
    die();
 }
 
@@ -153,7 +157,7 @@ $cont->Create(array('name'=>"zipit-backups-databases-$url"));
 $list = $cont->ObjectList();
 
 while($o = $list->Next())
-	echo $o->name ."<br/>";
+	echo $o->name ."<br/><br/>";
 
 
 // inputs for database login credentials with automatic wordpress detection
@@ -183,16 +187,12 @@ echo "<div>
 } 
 echo "You can manage your backups via the <a href='https://mycloud.rackspace.com/a/$username/files' target='_blank'>Cloud Files control panel</a>";
 echo "<br/><br/>";
-echo "If your browser \"times out\" the backup process will most likely continue in the background.";
-echo "</br>";
-echo "However, it does indicate that your backup is quite large and may take some time to complete.";
 echo "</center></em>";	
 echo "<br/><br/>";
 echo "<input type=\"submit\" name=\"submit\" value=\"Backup\" class=\"backup\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px; margin-left:243px; margin-right:50px;\"/> <input class=\"logout\" readonly type=\"button\" style=\"border: 1px solid #818185; background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;\" value=\"Logout\" onclick='location = \"zipit-files.php?logout=1\";'/></form>";
 
 ?>
-<br><br>
-<font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font></center>
+</center>
 </div>
 </body>
 </html>

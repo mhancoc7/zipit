@@ -12,9 +12,6 @@
 // require zipit configuration
     require('zipit-config.php');
 
-// define url
-    $url = $_SERVER['SERVER_NAME'];
-
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -43,10 +40,18 @@ function SelectAll(id)
 	  <li><a href="zipit-files.php" onfocus="this.blur();">Files</a></li> 
 	  <li><a href="zipit-db.php" onfocus="this.blur();">Databases</a></li> 
           <li><a href="zipit-logs.php" onfocus="this.blur();">Logs</a></li> 
-          <li class="active"><a href="#" onfocus="this.blur();">Setup Auto Backups</a></li> 
+          <li class="active"><a href="#" onfocus="this.blur();">Auto Backups</a></li> 
+          <li><a href="zipit-settings.php" onfocus="this.blur();">Settings</a></li>
 	</ul></center>
 <div class="wrapper">
-<center><div class="head">Zipit Backup Utility</div>
+<center>
+<?php
+
+
+// include update checker
+    include("zipit-update-footer.php");
+
+?>
 <h2>Automatic Backup Instructions</h2></center>
 <br />
 <div style="float:left;">

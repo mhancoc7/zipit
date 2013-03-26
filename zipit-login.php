@@ -50,7 +50,7 @@ function showLoginPasswordProtect($error_msg) {
   <div style="text-align:center">
   <form method="post">
     <font color="red"><?php echo $error_msg; ?></font><br />
-<?php if (USE_USERNAME) echo 'Username: <input type="input" name="access_login" style="font-size:22px;" /><br /><br />Password: &nbsp;'; ?><input type="password" name="access_password" style="font-size:22px;" /><br /><br /><input type="submit" name="Submit" value="Submit" style="background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;"/>
+<?php if (USE_USERNAME) echo 'Username: <input type="input" name="access_login" style="font-size:22px;" autofocus/><br /><br />Password: &nbsp;'; ?><input type="password" name="access_password" style="font-size:22px;" /><br /><br /><input type="submit" name="Submit" value="Submit" style="background-color:#ccc; -moz-border-radius: 15px; border-radius: 15px; text-align:center; width:100px; color:#000; padding:3px;"/>
   </form><br />
  <font size="1em">Developed by <a href="http://www.cloudsitesrock.com" target="_blank">CloudSitesRock.com</a> for Rackspace Cloud Sites</font>
   </div>  </div>
@@ -79,6 +79,17 @@ if (isset($_POST['access_password'])) {
     unset($_POST['access_login']);
     unset($_POST['access_password']);
     unset($_POST['Submit']);
+
+// Grab remote version of Zipit for update feature
+$ch = curl_init("https://raw.github.com/jeremehancock/zipit/master/version.php");
+$fp = fopen("zipit-remote_version.php", "w");
+
+curl_setopt($ch, CURLOPT_FILE, $fp);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+
+curl_exec($ch);
+curl_close($ch);
+fclose($fp);
   }
 
 }
@@ -103,6 +114,7 @@ else {
   }
   if (!$found) {
     showLoginPasswordProtect("");
+
   }
 }
 
