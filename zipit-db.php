@@ -157,14 +157,14 @@ $cont->Create(array('name'=>"zipit-backups-databases-$url"));
 $list = $cont->ObjectList();
 
 while($o = $list->Next())
-	echo $o->name ."<br/><br/>";
+	echo $o->name ."<br/>";
 
 
 // inputs for database login credentials with automatic wordpress detection
 $wordpress = '../wp-config.php';
 if (file_exists($wordpress)) {
 include($wordpress);
-echo "<center><font color=red>Wordpress Install Detected!</font> <br /><br />Database Credentials:<form name=\"zipit-db\" method=\"post\" action=\"zipit-zip-db.php\">";
+echo "<center><font color=red><br/>Wordpress Install Detected!</font> <br /><br />Database Credentials:<form name=\"zipit-db\" method=\"post\" action=\"zipit-zip-db.php\">";
 echo "<input type=\"text\" name=\"db_host\" value=";if(DB_HOST)
   {echo DB_HOST;} echo " autocomplete=\"off\" required=\"required\"><br />";
 echo "<input type=\"text\" name=\"db_user\" value=";if(DB_USER)
