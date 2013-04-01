@@ -107,7 +107,7 @@ catch (HttpUnauthorizedError $e) {
 // write to log
     $logtimestamp =  date("M-d-Y_H-i-s"); 
     $fh = fopen($zipitlog, 'a') or die("can't open file");
-    $stringData = "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
+    $stringData = "$logtimestamp -- Zipit zip started.\n";
     echo "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
     fwrite($fh, $stringData);
     fclose($fh);
