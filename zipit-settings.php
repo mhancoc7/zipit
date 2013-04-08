@@ -139,7 +139,7 @@ function removeSpaces(string) {
 
 <p>
     URL:<br />
-    <input name="url" type="text" id="url" value="<?php echo $url ?>" onblur="this.value=removeSpaces(this.value);" required="required"> <span class="hint--right" data-hint="This is the URL of your site. It is used to name the backups and the containers that they are stored in."><img src="images/hint.png" /></span>
+    <input name="url" type="text" id="url" value="<?php echo $url ?>" onblur="this.value=removeSpaces(this.value);" required="required"> <span class="hint--right" data-hint="This is the URL of your site. It is used to name the backups and the containers that they are stored in. Do not include http://"><img src="images/hint.png" /></span>
 </p>
 
 <p>
