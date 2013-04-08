@@ -35,6 +35,8 @@ $datacenter = "'. $_POST["datacenter"]. '";
 
 // URL
 $url = "'. $_POST["url"]. '";
+$url = str_replace("http://", "", $url);
+$url = str_replace("https://", "", $url);
 
 // Zipit Auto Hash
 $auto_hash = "'. $_POST["auto_hash"]. '";
