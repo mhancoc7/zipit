@@ -108,7 +108,7 @@ catch (HttpUnauthorizedError $e) {
     $logtimestamp =  date("M-d-Y_H-i-s"); 
     $fh = fopen($zipitlog, 'a') or die("can't open file");
     $stringData = "$logtimestamp -- Zipit zip started.\n";
-    echo "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
+    echo "$logtimestamp -- Zipit zip started\n";
     fwrite($fh, $stringData);
     fclose($fh);
 
@@ -137,7 +137,7 @@ catch (HttpUnauthorizedError $e) {
 
 
    
-$hash_check = file_get_contents('zipit-hash-check-files.php');
+   $hash_check = file_get_contents('zipit-hash-check-files.php');
    $site_size = file_get_contents('zipit-site-size.php');
    $api_check = file_get_contents('zipit-api-check-files.php');
    $md5_check = file_get_contents('zipit-md5-check-files.php');

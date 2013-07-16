@@ -35,7 +35,7 @@ else {
       die();
 }
 
-$site_size = file_get_contents('site-size.php');
+$site_size = file_get_contents('zipit-site-size.php');
 
 if ($site_size > 4608) {
 
